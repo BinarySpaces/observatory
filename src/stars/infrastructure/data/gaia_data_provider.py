@@ -9,7 +9,7 @@ class GaiaDataProvider(IGaiaDataProvider):
     Implements pagination via OFFSET.
     """
 
-    def get_stars(self, offset: int = 0) -> dict[int, Star]:
+    def get_stars(self, offset: int = 0) -> list[Star]:
         """Retrieves a batch of stars from Gaia."""
         query = f"""
         SELECT TOP 2000 source_id, ra, dec, parallax, phot_g_mean_mag
@@ -22,7 +22,7 @@ class GaiaDataProvider(IGaiaDataProvider):
         job = Gaia.launch_job(query)
         result_table = job.get_results()
 
-        stars = {}
+        stars = []
         for row in result_table:
             star = Star(
                 source_id=int(row['source_id']),
@@ -31,6 +31,6 @@ class GaiaDataProvider(IGaiaDataProvider):
                 parallax=float(row['parallax']),
                 phot_g_mean_mag=float(row['phot_g_mean_mag'])
             )
-            stars[star.source_id] = star
+            stars.append(star)
 
         return stars

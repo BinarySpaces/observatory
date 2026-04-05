@@ -32,7 +32,7 @@ class StarSyncService:
         """
         stars = self.gaia_data_provider.get_stars()
 
-        for star in stars.values():
+        for star in stars:
             if self.star_queries.find(star.source_id):
                 self.star_commands.update(star)
                 print(f'Star {star.source_id} ({star.name}) updated.')
